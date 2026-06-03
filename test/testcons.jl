@@ -56,10 +56,12 @@
 
     # The dimension of the matrix must fit.
     l1 = length(Chevie.charnames(Chevie.UnipotentCharacters(R), TeX = true))
-    obj = GenericDecMats.generic_decomposition_matrix(nam)
-    l2 = length(obj.ordinary)
-    if l1 != l2 && obj.is_complete == true
-      error("$nam: ordinary has length $l2 (should be $l1)")
+    for context in keys(GenericDecMats._decomposition_matrix_from_list)
+      obj = GenericDecMats.generic_decomposition_matrix(nam, context)
+      l2 = length(obj.ordinary)
+      if l1 != l2 && obj.is_complete == true
+        error("$nam: ordinary has length $l2 (should be $l1)")
+      end
     end
 
     # Let Chevie interpret the matrix.

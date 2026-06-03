@@ -2,9 +2,9 @@
 # in the Oscar context
 function _decomposition_matrix_from_list_Oscar(list::Vector, indets::Vector{String}, m::Int, n::Int)
     if length(indets) > 0
-      R, vars = Oscar.PolynomialRing(Oscar.ZZ, indets)
+      R, vars = Oscar.polynomial_ring(Oscar.ZZ, indets)
     else
-      R, vars = (Oscar.ZZ, Oscar.fmpz[])
+      R, vars = (Oscar.ZZ, Oscar.ZZRingElem[])
     end
 
     # Construct the decomposition matrix.
@@ -40,8 +40,8 @@ end
 
 function load_references()
   file = joinpath(@__DIR__, "..", "doc", "References.bib.xml")
-  prs = Oscar.GAP.Globals.ParseBibXMLextFiles(Oscar.GAP.julia_to_gap(file))::Oscar.GAP.GapObj
-  txt = Oscar.GAP.julia_to_gap("Text")::Oscar.GAP.GapObj
+  prs = Oscar.GAP.Globals.ParseBibXMLextFiles(Oscar.GAP.GapObj(file))::Oscar.GAP.GapObj
+  txt = Oscar.GAP.GapObj("Text")::Oscar.GAP.GapObj
   for e in prs.entries
     r = Oscar.GAP.Globals.RecBibXMLEntry(e, txt, prs.strings)::Oscar.GAP.GapObj
     gdm_references[Oscar.GAP.gap_to_julia(r.Label)] = e
@@ -50,7 +50,7 @@ end
 load_references()
 
 function formatted_reference(label::AbstractString)
-  txt = Oscar.GAP.julia_to_gap("Text")
+  txt = Oscar.GAP.GapObj("Text")
   Globals = Oscar.GAP.Globals
   r = gdm_references[label]::Oscar.GAP.GapObj
   origin = Globals.StringBibXMLEntry(r, txt)
